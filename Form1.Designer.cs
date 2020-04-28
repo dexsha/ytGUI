@@ -39,8 +39,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtQuality = new System.Windows.Forms.TextBox();
             this.pnlThreads = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
             this.flowThreads = new System.Windows.Forms.FlowLayoutPanel();
+            this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.pnlThreads.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -131,6 +132,7 @@
             this.txtQuality.Name = "txtQuality";
             this.txtQuality.Size = new System.Drawing.Size(24, 20);
             this.txtQuality.TabIndex = 9;
+            this.txtQuality.Text = "0";
             // 
             // pnlThreads
             // 
@@ -139,6 +141,13 @@
             this.pnlThreads.Name = "pnlThreads";
             this.pnlThreads.Size = new System.Drawing.Size(311, 212);
             this.pnlThreads.TabIndex = 10;
+            // 
+            // flowThreads
+            // 
+            this.flowThreads.Location = new System.Drawing.Point(3, 5);
+            this.flowThreads.Name = "flowThreads";
+            this.flowThreads.Size = new System.Drawing.Size(254, 173);
+            this.flowThreads.TabIndex = 0;
             // 
             // button1
             // 
@@ -150,18 +159,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
-            // flowThreads
+            // button2
             // 
-            this.flowThreads.Location = new System.Drawing.Point(3, 5);
-            this.flowThreads.Name = "flowThreads";
-            this.flowThreads.Size = new System.Drawing.Size(254, 173);
-            this.flowThreads.TabIndex = 0;
+            this.button2.Location = new System.Drawing.Point(142, 171);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(653, 232);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pnlThreads);
             this.Controls.Add(this.txtQuality);
@@ -197,6 +210,7 @@
         private System.Windows.Forms.Panel pnlThreads;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.FlowLayoutPanel flowThreads;
+        private System.Windows.Forms.Button button2;
     }
 }
 

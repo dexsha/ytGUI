@@ -14,24 +14,42 @@ namespace pyGUI
 {
     public partial class Form1 : Form
     {
-        public static Process ytdl = new Process();
+
+        public int workerid = 0;
+
+        Dictionary<int, Process> workers = new Dictionary<int, Process>();
+
+        public Process ytdl = new Process();
+
 
         public Form1()
         {
-            InitializeComponent();        
+            InitializeComponent();
+            
         }
         public void StartProcess()
         {
             try
             {
-                ytdl.StartInfo.FileName = "C:\\xampp\\htdocs\\pyGUI\\youtube-dl.exe";
+                workers.Add(workerid, ytdl);
+                workerid += 1;
+                ytdl.StartInfo.FileName = "C:\\xampp\\htdocs\\pyGUI\\resources\\youtube-dl.exe";
                 ytdl.StartInfo.Arguments = "-o \"C:\\xampp\\htdocs\\pyGUI\\dl\\%(title)s %(timestamp)s\" -f " + txtQuality.Text + " " + txtUrl.Text;
+                ytdl.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 ytdl.StartInfo.UseShellExecute = false;
                 ytdl.StartInfo.RedirectStandardOutput = true;
-                ytdl.StartInfo.CreateNoWindow = true;
+                ytdl.StartInfo.CreateNoWindow = false;
+                ytdl.StartInfo.RedirectStandardOutput = true;
+                ytdl.StartInfo.RedirectStandardInput = true;
                 ytdl.OutputDataReceived += (sender, e) => OutputHandler(lblOutput, e.Data);
                 ytdl.Start();
                 ytdl.BeginOutputReadLine();
+                string q = "";
+                while (!ytdl.HasExited)
+                {
+                    q += ytdl.StandardOutput.ReadToEnd();
+                }
+                lblStatus.Text = q; 
             }
             catch
             {
@@ -115,6 +133,14 @@ namespace pyGUI
         private void button1_Click_1(object sender, EventArgs e)
         {
             CreatePanel();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < workers.Count; i++)
+            {
+                MessageBox.Show(workers[i].Id + workers[i].StartInfo.Arguments);
+            }
         }
     }
 }
