@@ -14,13 +14,9 @@ namespace pyGUI
 {
     public partial class Form1 : Form
     {
+        List<Process> processes = new List<Process>();
 
-        public int workerid = 0;
-
-        Dictionary<int, Process> workers = new Dictionary<int, Process>();
-
-        public Process ytdl = new Process();
-
+        int id = 0;
 
         public Form1()
         {
@@ -31,8 +27,11 @@ namespace pyGUI
         {
             try
             {
-                workers.Add(workerid, ytdl);
-                workerid += 1;
+                Process ytdl = new Process();
+                processes.Add(ytdl);
+                CreatePanel();
+                id += 1;
+
                 ytdl.StartInfo.FileName = "C:\\xampp\\htdocs\\pyGUI\\resources\\youtube-dl.exe";
                 ytdl.StartInfo.Arguments = "-o \"C:\\xampp\\htdocs\\pyGUI\\dl\\%(title)s %(timestamp)s\" -f " + txtQuality.Text + " " + txtUrl.Text;
                 ytdl.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -49,12 +48,54 @@ namespace pyGUI
                 {
                     q += ytdl.StandardOutput.ReadToEnd();
                 }
-                lblStatus.Text = q; 
+                lblStatus.Text = q;
             }
             catch
             {
                 Console.WriteLine("Process error.");
             }
+        }
+
+        private void CreatePanel()
+        {
+            Panel pnlWorker = new Panel();
+            pnlWorker.Width = pnlThreads.Width;
+            pnlWorker.Height = 25;
+            flowThreads.Controls.Add(pnlWorker);
+
+            string[] channelName = txtUrl.Text.Split('/');
+            Label lblWorkerUrl = new Label();
+            lblWorkerUrl.Top = 0;
+            lblWorkerUrl.Left = 0;
+            lblWorkerUrl.Text = channelName[channelName.Length - 2];
+            pnlWorker.Controls.Add(lblWorkerUrl);
+
+            Label lblWorkerOutput = new Label();
+            lblWorkerOutput.Top = 0;
+            lblWorkerOutput.Left = 150;
+            lblWorkerOutput.Text = channelName[channelName.Length - 2];
+            pnlWorker.Controls.Add(lblWorkerOutput);
+
+            Button btnWorkerStop = new Button();
+            btnWorkerStop.Width = 50;
+            btnWorkerStop.Height = 25;
+            btnWorkerStop.Location = new Point(lblWorkerUrl.Width + 10, lblWorkerUrl.Location.Y);
+            btnWorkerStop.Text = "Stop";
+            btnWorkerStop.Tag = id;
+            btnWorkerStop.Click += StopEvent;
+            pnlWorker.Controls.Add(btnWorkerStop);
+
+            //Label lblWorkerStatus = new Label();
+            //lblWorkerStatus.Top = 0;
+            //lblWorkerStatus.Left = lblWorkerUrl.Width + 10;
+            //lblWorkerStatus.Text = txtUrl.Text;
+            //pnlWorker.Controls.Add(lblWorkerUrl);
+        }
+
+        private void StopEvent(object sender, EventArgs e)
+        {
+            int buttonId = (int)(sender as Button).Tag;
+            processes[buttonId].CloseMainWindow();
         }
 
         private void OutputHandler(Label label, string text)
@@ -76,71 +117,10 @@ namespace pyGUI
             Console.WriteLine(text);
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ytdl.CloseMainWindow();
-            }
-            catch
-            {
-                Console.WriteLine("No process running.");
-            }
-        }
-
         private void btnStart_Click(object sender, EventArgs e)
         {
             StartProcess();
             
-        }
-
-        private void CreatePanel()
-        {
-            Panel pnlWorker = new Panel();
-            pnlWorker.Width = pnlThreads.Width;
-            pnlWorker.Height = 25;
-            flowThreads.Controls.Add(pnlWorker);
-
-            Label lblWorkerUrl = new Label();
-            lblWorkerUrl.Top = 0;
-            lblWorkerUrl.Left = 0;
-
-            string[] channelName = txtUrl.Text.Split('/');
-
-            lblWorkerUrl.Text = channelName[channelName.Length-2];
-            pnlWorker.Controls.Add(lblWorkerUrl);
-
-            Button btnWorkerStop = new Button();
-            btnWorkerStop.Width = 50;
-            btnWorkerStop.Height = 25;
-            btnWorkerStop.Location = new Point(lblWorkerUrl.Width + 10, lblWorkerUrl.Location.Y);
-            btnWorkerStop.Text = "Stop";
-            pnlWorker.Controls.Add(btnWorkerStop);
-            //btnWorkerStop.Click += new EventHandler(StopThread);
-
-            //Label lblWorkerStatus = new Label();
-            //lblWorkerStatus.Top = 0;
-            //lblWorkerStatus.Left = lblWorkerUrl.Width + 10;
-            //lblWorkerStatus.Text = txtUrl.Text;
-            //pnlWorker.Controls.Add(lblWorkerUrl);
-        }
-
-        void StopThread(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void button1_Click_1(object sender, EventArgs e)
-        {
-            CreatePanel();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < workers.Count; i++)
-            {
-                MessageBox.Show(workers[i].Id + workers[i].StartInfo.Arguments);
-            }
         }
     }
 }
