@@ -30,7 +30,6 @@
         {
             this.lblOutput = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.btnStop = new System.Windows.Forms.Button();
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -40,8 +39,6 @@
             this.txtQuality = new System.Windows.Forms.TextBox();
             this.pnlThreads = new System.Windows.Forms.Panel();
             this.flowThreads = new System.Windows.Forms.FlowLayoutPanel();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.pnlThreads.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,21 +54,12 @@
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
+            this.lblStatus.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.lblStatus.Location = new System.Drawing.Point(55, 61);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(63, 13);
             this.lblStatus.TabIndex = 1;
             this.lblStatus.Text = "StatusLabel";
-            // 
-            // btnStop
-            // 
-            this.btnStop.Location = new System.Drawing.Point(96, 86);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(75, 23);
-            this.btnStop.TabIndex = 2;
-            this.btnStop.Text = "Stop";
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtUrl
             // 
@@ -139,43 +127,21 @@
             this.pnlThreads.Controls.Add(this.flowThreads);
             this.pnlThreads.Location = new System.Drawing.Point(330, 8);
             this.pnlThreads.Name = "pnlThreads";
-            this.pnlThreads.Size = new System.Drawing.Size(311, 212);
+            this.pnlThreads.Size = new System.Drawing.Size(556, 212);
             this.pnlThreads.TabIndex = 10;
             // 
             // flowThreads
             // 
             this.flowThreads.Location = new System.Drawing.Point(3, 5);
             this.flowThreads.Name = "flowThreads";
-            this.flowThreads.Size = new System.Drawing.Size(254, 173);
+            this.flowThreads.Size = new System.Drawing.Size(550, 61);
             this.flowThreads.TabIndex = 0;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(142, 141);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 11;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(142, 171);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 12;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(653, 232);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(898, 232);
             this.Controls.Add(this.pnlThreads);
             this.Controls.Add(this.txtQuality);
             this.Controls.Add(this.label1);
@@ -184,7 +150,6 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtUrl);
-            this.Controls.Add(this.btnStop);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.lblOutput);
             this.Name = "Form1";
@@ -199,7 +164,6 @@
 
         private System.Windows.Forms.Label lblOutput;
         private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.TextBox txtUrl;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
@@ -208,9 +172,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtQuality;
         private System.Windows.Forms.Panel pnlThreads;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.FlowLayoutPanel flowThreads;
-        private System.Windows.Forms.Button button2;
     }
 }
 

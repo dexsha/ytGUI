@@ -58,44 +58,104 @@ namespace pyGUI
 
         private void CreatePanel()
         {
-            Panel pnlWorker = new Panel();
-            pnlWorker.Width = pnlThreads.Width;
-            pnlWorker.Height = 25;
-            flowThreads.Controls.Add(pnlWorker);
+            flowThreads.Height = pnlThreads.Height;
+
+            TableLayoutPanel layoutWorker = new TableLayoutPanel();
+            layoutWorker.Width = flowThreads.Width - 5;
+            layoutWorker.Height = 27;
+            layoutWorker.CellBorderStyle = TableLayoutPanelCellBorderStyle.Single;
+            layoutWorker.GrowStyle = TableLayoutPanelGrowStyle.AddColumns;
+            layoutWorker.RowCount = 1;
+            flowThreads.Controls.Add(layoutWorker);
 
             string[] channelName = txtUrl.Text.Split('/');
-            Label lblWorkerUrl = new Label();
-            lblWorkerUrl.Top = 0;
-            lblWorkerUrl.Left = 0;
-            lblWorkerUrl.Text = channelName[channelName.Length - 2];
-            pnlWorker.Controls.Add(lblWorkerUrl);
+            Label lblChannelName = new Label();
+            lblChannelName.Width = 100;
+            lblChannelName.Height = 25;
+            lblChannelName.TextAlign = ContentAlignment.MiddleLeft;
+            lblChannelName.Text = channelName[channelName.Length - 2];
+            layoutWorker.Controls.Add(lblChannelName);
 
-            Label lblWorkerOutput = new Label();
-            lblWorkerOutput.Top = 0;
-            lblWorkerOutput.Left = 150;
-            lblWorkerOutput.Text = channelName[channelName.Length - 2];
-            pnlWorker.Controls.Add(lblWorkerOutput);
+            Label lblOutput = new Label();
+            lblOutput.Width = 100;
+            lblOutput.Height = 25;
+            lblOutput.TextAlign = ContentAlignment.MiddleLeft;
+            lblOutput.Text = "Output";
+            layoutWorker.Controls.Add(lblOutput);
+
+            Label lblStatus = new Label();
+            lblStatus.Width = 100;
+            lblStatus.Height = 25;
+            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
+            lblStatus.Text = "Status";
+            layoutWorker.Controls.Add(lblStatus);
+
+            Label lblTest = new Label();
+            lblTest.Width = 100;
+            lblTest.Height = 20;
+            lblTest.Text = channelName[channelName.Length - 2];
+            layoutWorker.Controls.Add(lblOutput);
 
             Button btnWorkerStop = new Button();
             btnWorkerStop.Width = 50;
             btnWorkerStop.Height = 25;
-            btnWorkerStop.Location = new Point(lblWorkerUrl.Width + 10, lblWorkerUrl.Location.Y);
+            btnWorkerStop.Margin = new Padding(-5, -5, 0, 0);
             btnWorkerStop.Text = "Stop";
             btnWorkerStop.Tag = id;
             btnWorkerStop.Click += StopEvent;
-            pnlWorker.Controls.Add(btnWorkerStop);
+            btnWorkerStop.Visible = true;
+            layoutWorker.Controls.Add(btnWorkerStop);
 
-            //Label lblWorkerStatus = new Label();
-            //lblWorkerStatus.Top = 0;
-            //lblWorkerStatus.Left = lblWorkerUrl.Width + 10;
-            //lblWorkerStatus.Text = txtUrl.Text;
-            //pnlWorker.Controls.Add(lblWorkerUrl);
+            Button btnWorkerStart = new Button();
+            btnWorkerStart.Width = 50;
+            btnWorkerStart.Height = 25;
+            btnWorkerStart.Margin = new Padding(-5, -5, 0, 0);
+            btnWorkerStart.Text = "Start";
+            btnWorkerStart.Tag = id;
+            btnWorkerStart.Click += StartEvent;
+            btnWorkerStart.Visible = true;
+            layoutWorker.Controls.Add(btnWorkerStart);
+
+            Button btnWorkerRemove = new Button();
+            btnWorkerRemove.Width = 55;
+            btnWorkerRemove.Height = 25;
+            btnWorkerRemove.Margin = new Padding(-5, -5, 0, 0);
+            btnWorkerRemove.Text = "Remove";
+            btnWorkerRemove.Tag = id;
+            btnWorkerRemove.Click += RemoveEvent;
+            layoutWorker.Controls.Add(btnWorkerRemove);
         }
 
         private void StopEvent(object sender, EventArgs e)
         {
-            int buttonId = (int)(sender as Button).Tag;
-            processes[buttonId].CloseMainWindow();
+            int processId = (int)(sender as Button).Tag;
+
+            if (!processes[processId].HasExited)
+            {
+                processes[processId].CloseMainWindow();
+                //(sender as Button).Visible = false;
+                //ShowStartButton();
+            }
+        }
+
+        private void StartEvent(object sender, EventArgs e)
+        {
+            int processId = (int)(sender as Button).Tag;
+
+            if (processes[processId].HasExited)
+                processes[processId].Start();
+            else
+                MessageBox.Show("Process is still running!");
+        }
+
+        private void RemoveEvent(object sender, EventArgs e)
+        {
+            int processId = (int)(sender as Button).Tag;
+
+            if (processes[processId].HasExited)
+                (sender as Button).Parent.Dispose();
+            else
+                MessageBox.Show("Process is still running!");
         }
 
         private void OutputHandler(Label label, string text)
@@ -119,8 +179,11 @@ namespace pyGUI
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            StartProcess();
-            
+            if (txtUrl.Text != "")
+                StartProcess();
+            else
+                MessageBox.Show("Enter URL!");
         }
+
     }
 }
