@@ -15,6 +15,8 @@ namespace pyGUI
     public partial class Form1 : Form
     {
         List<Process> processes = new List<Process>();
+        List<Label> outputLabels = new List<Label>();
+        List<ThreadHelperClass> threadHelper = new List<ThreadHelperClass>();
 
         int id = 0;
 
@@ -27,9 +29,14 @@ namespace pyGUI
         {
             try
             {
+                
+                
+                CreatePanel();
                 Process ytdl = new Process();
                 processes.Add(ytdl);
-                CreatePanel();
+                ThreadHelperClass tHelper = new ThreadHelperClass();
+                threadHelper.Add(tHelper);
+
                 id += 1;
 
                 ytdl.StartInfo.FileName = "C:\\xampp\\htdocs\\pyGUI\\resources\\youtube-dl.exe";
@@ -40,19 +47,33 @@ namespace pyGUI
                 ytdl.StartInfo.CreateNoWindow = false;
                 ytdl.StartInfo.RedirectStandardOutput = true;
                 ytdl.StartInfo.RedirectStandardInput = true;
-                ytdl.OutputDataReceived += (sender, e) => OutputHandler(lblOutput, e.Data);
+                ytdl.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+                {
+                    tHelper.SetText(this, outputLabels[id-1], e.Data);
+                });
                 ytdl.Start();
                 ytdl.BeginOutputReadLine();
-                string q = "";
-                while (!ytdl.HasExited)
-                {
-                    q += ytdl.StandardOutput.ReadToEnd();
-                }
-                lblStatus.Text = q;
             }
             catch
             {
                 Console.WriteLine("Process error.");
+            }
+        }
+        public class ThreadHelperClass
+        {
+            delegate void SetTextCallback(Form f, Control ctrl, string text);
+
+            public void SetText(Form form, Control ctrl, string text)
+            {
+                if (ctrl.InvokeRequired)
+                {
+                    SetTextCallback d = new SetTextCallback(SetText);
+                    form.Invoke(d, new object[] { form, ctrl, text });
+                }
+                else
+                {
+                    ctrl.Text = text;
+                }
             }
         }
 
@@ -77,11 +98,13 @@ namespace pyGUI
             layoutWorker.Controls.Add(lblChannelName);
 
             Label lblOutput = new Label();
-            lblOutput.Width = 100;
+            lblOutput.Width = 150;
             lblOutput.Height = 25;
             lblOutput.TextAlign = ContentAlignment.MiddleLeft;
-            lblOutput.Text = "Output";
+            lblOutput.Text = "";
+            lblOutput.Tag = id;
             layoutWorker.Controls.Add(lblOutput);
+            outputLabels.Add(lblOutput);
 
             Label lblStatus = new Label();
             lblStatus.Width = 100;
@@ -89,12 +112,6 @@ namespace pyGUI
             lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             lblStatus.Text = "Status";
             layoutWorker.Controls.Add(lblStatus);
-
-            Label lblTest = new Label();
-            lblTest.Width = 100;
-            lblTest.Height = 20;
-            lblTest.Text = channelName[channelName.Length - 2];
-            layoutWorker.Controls.Add(lblOutput);
 
             Button btnWorkerStop = new Button();
             btnWorkerStop.Width = 50;
@@ -124,6 +141,7 @@ namespace pyGUI
             btnWorkerRemove.Tag = id;
             btnWorkerRemove.Click += RemoveEvent;
             layoutWorker.Controls.Add(btnWorkerRemove);
+
         }
 
         private void StopEvent(object sender, EventArgs e)
@@ -133,8 +151,6 @@ namespace pyGUI
             if (!processes[processId].HasExited)
             {
                 processes[processId].CloseMainWindow();
-                //(sender as Button).Visible = false;
-                //ShowStartButton();
             }
         }
 
@@ -158,25 +174,6 @@ namespace pyGUI
                 MessageBox.Show("Process is still running!");
         }
 
-        private void OutputHandler(Label label, string text)
-        {
-            if (label.InvokeRequired)
-            {
-                label.Invoke((System.Action)(() => OutputHandler(label, text)));
-            }
-            else
-            {
-                label.Text = text;
-                if (text == "") {
-                    lblStatus.Text = "Stopped";
-                }
-                else if (text != "") {
-                    lblStatus.Text = "Running";
-                }
-            }
-            Console.WriteLine(text);
-        }
-
         private void btnStart_Click(object sender, EventArgs e)
         {
             if (txtUrl.Text != "")
@@ -184,6 +181,5 @@ namespace pyGUI
             else
                 MessageBox.Show("Enter URL!");
         }
-
     }
 }
